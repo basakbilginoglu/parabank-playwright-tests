@@ -27,4 +27,31 @@ test('UI-02: User can transfer funds between accounts', async ({ page }) => {
   await expect(transferPage.amountResult).toHaveText('$100.00');
   await expect(transferPage.fromAccountResult).toHaveText('13566');
   await expect(transferPage.toAccountResult).toHaveText('13788');
+
+  
 });
+
+
+test('UI-04: Negative transfer should not be accepted', async ({ page }) => {
+  const { username, password } = credentials;
+
+  expect(username, 'PARABANK_USERNAME must be configured').toBeTruthy();
+  expect(password, 'PARABANK_PASSWORD must be configured').toBeTruthy();
+
+  const loginPage = new LoginPage(page);
+  const transferPage = new TransferPage(page);
+
+  await loginPage.goto();
+  await loginPage.login(username!, password!);
+
+  await expect(page).toHaveURL(/overview\.htm$/);
+
+  await transferPage.goto();
+  await expect(transferPage.amountInput).toBeVisible();
+
+  await transferPage.transfer('-100', '13566', '13788');
+
+  // A negative transfer must not be reported as successful.
+  await expect(transferPage.resultHeading).not.toHaveText('Transfer Complete!');
+});
+
