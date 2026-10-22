@@ -1,42 +1,66 @@
+
 name: Playwright Tests
+
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
+
 jobs:
   test:
     runs-on: ubuntu-latest
+
     env:
       PARABANK_USERNAME: ${{ secrets.PARABANK_USERNAME }}
       PARABANK_PASSWORD: ${{ secrets.PARABANK_PASSWORD }}
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
-    - name: Start ParaBank
-      run: |
-        docker run -d --name parabank -p 8080:8080 parasoft/parabank
-        for i in {1..30}; do
-          if curl -fsS http://localhost:8080/parabank/ > /dev/null; then
-            echo "ParaBank is ready"
-            exit 0
-          fi
-          sleep 2
-        done
-        echo "ParaBank did not become ready"
-        docker logs parabank
-        exit 1
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start ParaBank
+        run: |
+          docker run -d \
+            --name parabank \
+            -p 8080:8080 \
+            parasoft/parabank:latest
+
+      - name: Wait for ParaBank to be ready
+        run: |
+          for i in {1..60}; do
+            if curl --fail --silent \
+              http://localhost:8080/parabank/index.htm \
+              > /dev/null; then
+              echo "ParaBank is ready."
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "ParaBank did not become ready in time."
+          docker logs parabank
+          exit 1
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
