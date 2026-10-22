@@ -6,8 +6,10 @@ on:
     branches: [ main, master ]
 jobs:
   test:
-    timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      PARABANK_USERNAME: ${{ secrets.PARABANK_USERNAME }}
+      PARABANK_PASSWORD: ${{ secrets.PARABANK_PASSWORD }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
