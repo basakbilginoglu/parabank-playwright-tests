@@ -13,7 +13,6 @@ const uniqueId = Date.now().toString();
 
 const username = `qa_${uniqueId}`;
 const ssn = uniqueId.slice(-9).padStart(9, '0');
-
   const registerPage = new RegisterPage(page);
 
   await registerPage.goto();
