@@ -13,8 +13,8 @@ test('UI-03: Transferred funds appear in sender and recipient account activity',
 
   const fromAccountId = '13566';
   const toAccountId = '13788';
-  const amount = '100';
-  const displayedAmount = '$100.00';
+  const amount = '137.25';
+  const displayedAmount = '$137.25';
 
   const loginPage = new LoginPage(page);
   const transferPage = new TransferPage(page);

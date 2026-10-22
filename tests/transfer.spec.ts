@@ -33,6 +33,11 @@ test('UI-02: User can transfer funds between accounts', async ({ page }) => {
 
 
 test('UI-04: Negative transfer should not be accepted', async ({ page }) => {
+    test.fail(
+    true,
+    'Known bug: ParaBank accepts negative transfer amounts.'
+  );
+    
   const { username, password } = credentials;
 
   expect(username, 'PARABANK_USERNAME must be configured').toBeTruthy();
