@@ -27,3 +27,16 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+    - name: Start ParaBank
+      run: |
+        docker run -d --name parabank -p 8080:8080 parasoft/parabank
+        for i in {1..30}; do
+          if curl -fsS http://localhost:8080/parabank/ > /dev/null; then
+            echo "ParaBank is ready"
+            exit 0
+          fi
+          sleep 2
+        done
+        echo "ParaBank did not become ready"
+        docker logs parabank
+        exit 1
