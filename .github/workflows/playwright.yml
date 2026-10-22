@@ -27,7 +27,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
+            - name: Inspect ParaBank image
+        run: |
+          docker pull parasoft/parabank:latest
+          docker image inspect parasoft/parabank:latest \
+            --format 'Image ID: {{.Id}} | OS: {{.Os}} | Architecture: {{.Architecture}} | Digests: {{json .RepoDigests}}' 
       - name: Start ParaBank
         run: |
           docker run -d \
