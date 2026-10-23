@@ -1,0 +1,80 @@
+21-Oct-2026 12:29:31.294 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/11.0.27
+21-Oct-2026 12:29:31.296 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Oct 6 2026 18:12:07 UTC
+21-Oct-2026 12:29:31.297 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 11.0.27.0
+21-Oct-2026 12:29:31.297 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+21-Oct-2026 12:29:31.297 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.3.13-linuxkit
+21-Oct-2026 12:29:31.297 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          aarch64
+21-Oct-2026 12:29:31.297 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /opt/java/openjdk
+21-Oct-2026 12:29:31.297 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           25.0.4.1+1-LTS
+21-Oct-2026 12:29:31.298 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+21-Oct-2026 12:29:31.298 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /usr/local/tomcat
+21-Oct-2026 12:29:31.298 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /usr/local/tomcat
+21-Oct-2026 12:29:31.301 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/usr/local/tomcat/conf/logging.properties
+21-Oct-2026 12:29:31.301 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+21-Oct-2026 12:29:31.301 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+21-Oct-2026 12:29:31.301 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+21-Oct-2026 12:29:31.301 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
+21-Oct-2026 12:29:31.301 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+21-Oct-2026 12:29:31.302 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
+21-Oct-2026 12:29:31.302 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util=ALL-UNNAMED
+21-Oct-2026 12:29:31.302 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+21-Oct-2026 12:29:31.302 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+21-Oct-2026 12:29:31.302 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --enable-native-access=ALL-UNNAMED
+21-Oct-2026 12:29:31.302 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/usr/local/tomcat
+21-Oct-2026 12:29:31.302 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/usr/local/tomcat
+21-Oct-2026 12:29:31.302 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/usr/local/tomcat/temp
+21-Oct-2026 12:29:31.304 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded Apache Tomcat Native library [2.0.16] using APR version [1.7.2].
+21-Oct-2026 12:29:31.307 INFO [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 3.0.13 30 Jan 2024]
+21-Oct-2026 12:29:31.433 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+21-Oct-2026 12:29:31.441 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [225] milliseconds
+21-Oct-2026 12:29:31.461 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+21-Oct-2026 12:29:31.461 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/11.0.27]
+21-Oct-2026 12:29:31.464 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/usr/local/tomcat/webapps/parabank]
+21-Oct-2026 12:29:32.965 INFO [main] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+[Server@cd0c71e]: [Thread[#3,main,5,main]]: setRestartOnShutdown(false)
+[Server@cd0c71e]: [Thread[#3,main,5,main]]: setNoSystemExit(true)
+12:29:34.391 [main] INFO  com.parasoft.parabank.util.ServerBean - HSQL Server Startup sequence initiated
+[Server@cd0c71e]: Initiating startup sequence...
+[Server@cd0c71e]: Server socket opened successfully in 1 ms.
+[Server@cd0c71e]: Database [index=0, id=0, db=file:/usr/local/tomcat/webapps/parabank/WEB-INF/db/db2, alias=bookstore] opened successfully in 242 ms.
+[Server@cd0c71e]: Database [index=1, id=1, db=file:/usr/local/tomcat/webapps/parabank/WEB-INF/db/db, alias=parabank] opened successfully in 26 ms.
+[Server@cd0c71e]: Startup sequence completed in 276 ms.
+[Server@cd0c71e]: 2026-10-21 12:29:34.676 HSQLDB server 2.7.4 is online on port 9001
+[Server@cd0c71e]: To close normally, connect and execute SHUTDOWN SQL
+[Server@cd0c71e]: From command line, use [Ctrl]+[C] to abort abruptly
+12:29:34.700 [main] INFO  com.parasoft.parabank.util.ServerBean - HSQL Server listening on port 9001
+21-Oct-2026 12:29:36.183 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/usr/local/tomcat/webapps/parabank] has finished in [4,719] ms
+21-Oct-2026 12:29:36.188 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
+21-Oct-2026 12:29:36.195 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [4753] milliseconds
+12:34:15.623 [http-nio-8080-exec-3] WARN  com.parasoft.parabank.web.controller.IndexController - Database not yet initialized. Initializing...
+12:34:15.631 [http-nio-8080-exec-4] INFO  com.parasoft.parabank.dao.jdbc.JdbcAdminDao - Initializing parabank database...
+12:34:15.639 [http-nio-8080-exec-4] INFO  com.parasoft.parabank.dao.jdbc.JdbcAdminDao - Populating parabank database...
+12:34:15.654 [http-nio-8080-exec-4] INFO  com.parasoft.parabank.dao.jdbc.JdbcAdminDao - Running Dynamic Data inserters...
+12:34:15.799 [http-nio-8080-exec-4] INFO  com.parasoft.parabank.dao.jdbc.JdbcAdminDao - Database initialized & populated
+12:34:15.799 [http-nio-8080-exec-4] INFO  com.parasoft.parabank.dao.jdbc.JdbcAdminDao - Initializing database...
+12:34:16.016 [http-nio-8080-exec-4] INFO  com.parasoft.parabank.dao.jdbc.JdbcAdminDao - Database initialized
+12:34:16.025 [http-nio-8080-exec-5] INFO  com.parasoft.parabank.dao.jdbc.JdbcNewsDao - Retrieved 3 news items for date = 2026-10-21
+12:34:16.025 [http-nio-8080-exec-5] INFO  com.parasoft.parabank.domain.util.NewsUtil - Creating new list for news date: 2026-10-21
+12:34:16.025 [http-nio-8080-exec-5] INFO  com.parasoft.parabank.domain.util.NewsUtil - Adding news item with id = 6
+12:34:16.025 [http-nio-8080-exec-5] INFO  com.parasoft.parabank.domain.util.NewsUtil - Adding news item with id = 5
+12:34:16.025 [http-nio-8080-exec-5] INFO  com.parasoft.parabank.domain.util.NewsUtil - Adding news item with id = 4
+12:42:27.237 [http-nio-8080-exec-3] INFO  com.parasoft.parabank.dao.jdbc.JdbcNewsDao - Retrieved 3 news items for date = 2026-10-21
+12:42:27.239 [http-nio-8080-exec-3] INFO  com.parasoft.parabank.domain.util.NewsUtil - Creating new list for news date: 2026-10-21
+12:42:27.239 [http-nio-8080-exec-3] INFO  com.parasoft.parabank.domain.util.NewsUtil - Adding news item with id = 6
+12:42:27.239 [http-nio-8080-exec-3] INFO  com.parasoft.parabank.domain.util.NewsUtil - Adding news item with id = 5
+12:42:27.239 [http-nio-8080-exec-3] INFO  com.parasoft.parabank.domain.util.NewsUtil - Adding news item with id = 4
+12:47:06.498 [http-nio-8080-exec-2] INFO  com.parasoft.parabank.dao.jdbc.JdbcNewsDao - Retrieved 3 news items for date = 2026-10-21
+12:47:06.499 [http-nio-8080-exec-2] INFO  com.parasoft.parabank.domain.util.NewsUtil - Creating new list for news date: 2026-10-21
+12:47:06.499 [http-nio-8080-exec-2] INFO  com.parasoft.parabank.domain.util.NewsUtil - Adding news item with id = 6
+12:47:06.499 [http-nio-8080-exec-2] INFO  com.parasoft.parabank.domain.util.NewsUtil - Adding news item with id = 5
+12:47:06.499 [http-nio-8080-exec-2] INFO  com.parasoft.parabank.domain.util.NewsUtil - Adding news item with id = 4
+12:49:57.482 [http-nio-8080-exec-10] INFO  com.parasoft.parabank.dao.jdbc.JdbcAccountDao - Getting account object for id = 1
+12:49:57.487 [http-nio-8080-exec-10] ERROR com.parasoft.parabank.service.ParaBankServiceImpl - DataAccessException caught :
+org.springframework.dao.EmptyResultDataAccessException: Incorrect result size: expected 1, actual 0
+	at org.springframework.dao.support.DataAccessUtils.nullableSingleResult(DataAccessUtils.java:198)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:894)
+	at com.parasoft.parabank.dao.jdbc.JdbcAccountDao.getAccount(JdbcAccountDao.java:107)
+	at com.parasoft.parabank.domain.logic.impl.BankManagerImpl.getAccount(BankManagerImpl.java:165)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
