@@ -29,6 +29,12 @@ const ssn = uniqueId.slice(-9).padStart(9, '0');
   username,
   password: password!,
 });
+console.log('Registration URL:', page.url());
+
+console.log(
+  'Registration result:',
+  (await page.locator('#rightPanel').innerText()).trim()
+);
 
   await expect(page.locator('#rightPanel')).toContainText(
     'Your account was created successfully. You are now logged in.'
