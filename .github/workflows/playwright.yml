@@ -40,21 +40,21 @@ jobs:
             -p 8080:8080 \
             parasoft/parabank:latest
 
-      - name: Wait for ParaBank to be ready
+      
+      - name: Wait for ParaBank
         run: |
           for i in {1..60}; do
-            if curl --fail --silent \
-              http://localhost:8080/parabank/index.htm \
-              > /dev/null; then
-              echo "ParaBank is ready."
+            if curl --fail --silent http://localhost:8080/parabank/index.htm > /dev/null; then
+              echo "ParaBank HTTP endpoint is responding."
               exit 0
             fi
-            sleep 5
+            sleep 2
           done
 
-          echo "ParaBank did not become ready in time."
+          echo "ParaBank did not become available."
           docker logs parabank
           exit 1
+
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
