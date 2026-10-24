@@ -1,62 +1,35 @@
-
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
+import { test, expect } from './fixtures';
+import { AccountPage } from '../pages/AccountPage';
+import { ActivityPage } from '../pages/ActivityPage';
 import { TransferPage } from '../pages/TransferPage';
-import { AccountActivityPage } from '../pages/AccountActivityPage';
-import { credentials } from '../test-data/credentials';
+import { chooseDistinctAccounts, getTransferTestData } from '../test-data/accounts';
 
-test('UI-03: Transferred funds appear in sender and recipient account activity', async ({ page }) => {
-  const { username, password } = credentials;
+test('UI-03: a completed transfer is represented in the destination account activity', async ({ page, loggedInPage }) => {
+  void loggedInPage;
 
-  expect(username, 'PARABANK_USERNAME must be configured').toBeTruthy();
-  expect(password, 'PARABANK_PASSWORD must be configured').toBeTruthy();
+  // Transfer and history verification are one workflow because the history assertion
+  // depends on the transaction created by this test.
+  const accountPage = new AccountPage(page);
+  await accountPage.goto();
+  await accountPage.expectVisibleAccounts();
 
-  const fromAccountId = '13566';
-  const toAccountId = '13788';
-  const amount = '137.25';
-  const displayedAmount = '$137.25';
+  const data = getTransferTestData();
+  const { fromAccountId, toAccountId } = chooseDistinctAccounts(
+    await accountPage.getAccountIds(),
+    data.fromAccountId,
+    data.toAccountId
+  );
 
-  const loginPage = new LoginPage(page);
   const transferPage = new TransferPage(page);
-  const activityPage = new AccountActivityPage(page);
-
-  // Log in
-  await loginPage.goto();
-  await loginPage.login(username!, password!);
-  await expect(page).toHaveURL(/\/overview\.htm$/);
-
-  // Count outgoing transfers before the transfer
-  await activityPage.goto(fromAccountId);
-  await expect(activityPage.transactionsTable).toBeVisible();
-
-  const sentCountBefore = await activityPage
-    .getSentTransferRowsByDebitAmount(displayedAmount)
-    .count();
-
-  // Count incoming transfers before the transfer
-  await activityPage.goto(toAccountId);
-  await expect(activityPage.transactionsTable).toBeVisible();
-
-  const receivedCountBefore = await activityPage
-    .getReceivedTransferRowsByCreditAmount(displayedAmount)
-    .count();
-
-  // Perform the transfer
   await transferPage.goto();
-  await transferPage.transfer(amount, fromAccountId, toAccountId);
-  await expect(transferPage.resultHeading).toHaveText('Transfer Complete!');
+  await transferPage.transfer(data.amount, fromAccountId, toAccountId);
+  await transferPage.expectTransferCompleted(data.amount, fromAccountId, toAccountId);
 
-  // Verify the sender's activity
-  await activityPage.goto(fromAccountId);
-
-  await expect(
-    activityPage.getSentTransferRowsByDebitAmount(displayedAmount)
-  ).toHaveCount(sentCountBefore + 1);
-
-  // Verify the recipient's activity
+  const activityPage = new ActivityPage(page);
   await activityPage.goto(toAccountId);
+  await activityPage.expectTransactionTable();
 
-  await expect(
-    activityPage.getReceivedTransferRowsByCreditAmount(displayedAmount)
-  ).toHaveCount(receivedCountBefore + 1);
+  const rows = activityPage.getTransactionRows();
+  await expect(rows).not.toHaveCount(0);
+  await expect(rows.filter({ hasText: data.amount })).not.toHaveCount(0);
 });

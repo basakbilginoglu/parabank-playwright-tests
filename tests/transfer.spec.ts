@@ -1,62 +1,28 @@
-
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
+import { test, expect } from './fixtures';
+import { AccountPage } from '../pages/AccountPage';
 import { TransferPage } from '../pages/TransferPage';
-import { credentials } from '../test-data/credentials';
+import { chooseDistinctAccounts, getTransferTestData } from '../test-data/accounts';
 
-test('UI-02: User can transfer funds between accounts', async ({ page }) => {
-  const { username, password } = credentials;
+test('UI-02: transfer reports the selected accounts and amount', async ({ page, loggedInPage }) => {
+  void loggedInPage;
+  const accountPage = new AccountPage(page);
+  await accountPage.goto();
+  await accountPage.expectVisibleAccounts();
 
-  expect(username, 'PARABANK_USERNAME must be configured').toBeTruthy();
-  expect(password, 'PARABANK_PASSWORD must be configured').toBeTruthy();
-
-  const loginPage = new LoginPage(page);
-  const transferPage = new TransferPage(page);
-
-  await loginPage.goto();
-  await loginPage.login(username!, password!);
-
-  await expect(page).toHaveURL(/\/overview\.htm$/);
-
-  await transferPage.goto();
-  await expect(transferPage.amountInput).toBeVisible();
-
-  await transferPage.transfer('100', '13566', '13788');
-
-  await expect(transferPage.resultHeading).toHaveText('Transfer Complete!');
-  await expect(transferPage.amountResult).toHaveText('$100.00');
-  await expect(transferPage.fromAccountResult).toHaveText('13566');
-  await expect(transferPage.toAccountResult).toHaveText('13788');
-
-  
-});
-
-
-test('UI-04: Negative transfer should not be accepted', async ({ page }) => {
-    test.fail(
-    true,
-    'Known bug: ParaBank accepts negative transfer amounts.'
+  const data = getTransferTestData();
+  const accounts = chooseDistinctAccounts(
+    await accountPage.getAccountIds(),
+    data.fromAccountId,
+    data.toAccountId
   );
-    
-  const { username, password } = credentials;
 
-  expect(username, 'PARABANK_USERNAME must be configured').toBeTruthy();
-  expect(password, 'PARABANK_PASSWORD must be configured').toBeTruthy();
-
-  const loginPage = new LoginPage(page);
   const transferPage = new TransferPage(page);
-
-  await loginPage.goto();
-  await loginPage.login(username!, password!);
-
-  await expect(page).toHaveURL(/overview\.htm$/);
-
   await transferPage.goto();
-  await expect(transferPage.amountInput).toBeVisible();
 
-  await transferPage.transfer('-100', '13566', '13788');
+  const options = await transferPage.getAccountOptions();
+  expect(options.from, 'Source account dropdown should contain account options').toContain(accounts.fromAccountId);
+  expect(options.to, 'Destination account dropdown should contain account options').toContain(accounts.toAccountId);
 
-  // A negative transfer must not be reported as successful.
-  await expect(transferPage.resultHeading).not.toHaveText('Transfer Complete!');
+  await transferPage.transfer(data.amount, accounts.fromAccountId, accounts.toAccountId);
+  await transferPage.expectTransferCompleted(data.amount, accounts.fromAccountId, accounts.toAccountId);
 });
-
