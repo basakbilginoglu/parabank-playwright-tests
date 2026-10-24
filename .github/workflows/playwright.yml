@@ -1,3 +1,4 @@
+
 name: Playwright Tests
 
 on:
@@ -18,20 +19,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 20
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Inspect ParaBank image
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Pull ParaBank image
         run: |
-          docker pull parasoft/parabank:latest
-          docker image inspect parasoft/parabank:latest \
-            --format 'Image ID: {{.Id}} | OS: {{.Os}} | Architecture: {{.Architecture}} | Digests: {{json .RepoDigests}}'
+          docker pull parasoft/parabank@sha256:0de7bbc8eb0f7ba61579421df1fc834fd7f559c08bf295597c0f9081e0a906e9
+
+      - name: Verify ParaBank image
+        run: |
+          docker image inspect \
+            parasoft/parabank@sha256:0de7bbc8eb0f7ba61579421df1fc834fd7f559c08bf295597c0f9081e0a906e9 \
+            --format='ID={{.Id}} OS={{.Os}} Architecture={{.Architecture}} RepoDigests={{json .RepoDigests}}'
 
       - name: Start ParaBank
         run: |
@@ -40,8 +48,6 @@ jobs:
             -p 8080:8080 \
             parasoft/parabank@sha256:0de7bbc8eb0f7ba61579421df1fc834fd7f559c08bf295597c0f9081e0a906e9
 
-      
-     
       - name: Wait for ParaBank
         run: |
           for i in {1..60}; do
@@ -62,25 +68,28 @@ jobs:
             "Database not yet initialized|HSQL Server|Database.*opened|SEQUENCE|ERROR" \
             || true
 
-
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      - name: TypeScript typecheck
+        run: npm run typecheck
 
       - name: Run Playwright tests
         run: npx playwright test
 
-      - name: Show ParaBank logs on failure
+      - name: ParaBank logs on failure
         if: failure()
         run: docker logs parabank
 
-      - name: Upload test reports
-        if: ${{ !cancelled() }}
+      - name: Upload Playwright report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-test-reports
-          path: |
-            playwright-report/
-            test-results/
+          name: playwright-html-report
+          path: playwright-report/
           if-no-files-found: ignore
-          retention-days: 30
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-results/
+          if-no-files-found: ignore
