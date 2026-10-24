@@ -46,19 +46,47 @@ jobs:
             -p 8080:8080 \
             parasoft/parabank@sha256:0de7bbc8eb0f7ba61579421df1fc834fd7f559c08bf295597c0f9081e0a906e9
 
-      - name: Wait for ParaBank
+      - name: Wait for ParaBank and initialize DB
         run: |
+          echo "Waiting for ParaBank HTTP..."
           for i in $(seq 1 60); do
-            if curl --fail --silent http://localhost:8080/parabank/index.htm > /dev/null && curl --fail --silent http://localhost:8080/parabank/register.htm > /dev/null; then
-              echo "ParaBank is responding. Waiting a bit for DB startup..."
-              sleep 10
+            if curl --fail --silent http://localhost:8080/parabank/index.htm > /dev/null; then
+              echo "ParaBank is up."
+              break
+            fi
+            sleep 2
+          done
+
+          echo "Initializing database..."
+          ok=0
+          for i in $(seq 1 20); do
+            if curl --fail --silent --show-error -X POST http://localhost:8080/parabank/services/bank/initializeDB; then
+              echo ""
+              echo "Database initialized."
+              ok=1
+              break
+            fi
+            echo "initializeDB failed, retrying ($i/20)..."
+            sleep 3
+          done
+
+          if [ "$ok" -ne 1 ]; then
+            echo "Database initialization failed."
+            docker logs parabank 2>&1 | tail -100
+            exit 1
+          fi
+
+          echo "Checking register page..."
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://localhost:8080/parabank/register.htm > /dev/null; then
+              echo "Register page is ready."
               exit 0
             fi
             sleep 2
           done
 
-          echo "ParaBank did not become available."
-          docker logs parabank
+          echo "Register page did not become ready."
+          docker logs parabank 2>&1 | tail -100
           exit 1
 
       - name: TypeScript typecheck

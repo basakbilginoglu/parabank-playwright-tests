@@ -37,6 +37,7 @@ console.log(
 );
 
   await expect(page.locator('#rightPanel')).toContainText(
-    'Your account was created successfully. You are now logged in.'
-  );
+  'Your account was created successfully. You are now logged in.',
+  { timeout: 15000 }
+);
 });
