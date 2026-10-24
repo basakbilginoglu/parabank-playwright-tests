@@ -39,12 +39,6 @@ jobs:
         run: |
           docker pull parasoft/parabank@sha256:0de7bbc8eb0f7ba61579421df1fc834fd7f559c08bf295597c0f9081e0a906e9
 
-      - name: Verify ParaBank image
-        run: |
-          docker image inspect \
-            parasoft/parabank@sha256:0de7bbc8eb0f7ba61579421df1fc834fd7f559c08bf295597c0f9081e0a906e9 \
-            --format='ID={{.Id}} OS={{.Os}} Architecture={{.Architecture}} RepoDigests={{json .RepoDigests}}'
-
       - name: Start ParaBank
         run: |
           docker run -d \
@@ -54,6 +48,45 @@ jobs:
 
       - name: Wait for ParaBank
         run: |
-          for i in {1..60}; do
-            if curl --fail --silent http://localhost:8080/parabank/index.htm > /dev/null \
-               && curl --fail --silent http://localhost:8080/parabank/register.htm > /dev/null; then
+          for i in $(seq 1 60); do
+            if curl --fail --silent http://localhost:8080/parabank/index.htm > /dev/null && curl --fail --silent http://localhost:8080/parabank/register.htm > /dev/null; then
+              echo "ParaBank is responding. Waiting a bit for DB startup..."
+              sleep 10
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "ParaBank did not become available."
+          docker logs parabank
+          exit 1
+
+      - name: TypeScript typecheck
+        run: npm run typecheck
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: ParaBank logs on failure
+        if: failure()
+        run: |
+          echo "===== Exceptions ====="
+          docker logs parabank 2>&1 | grep -n -i -B2 -A15 "exception" | head -150
+          echo "===== Last 100 lines ====="
+          docker logs parabank 2>&1 | tail -100
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: playwright-report/
+          if-no-files-found: ignore
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-results/
+          if-no-files-found: ignore
