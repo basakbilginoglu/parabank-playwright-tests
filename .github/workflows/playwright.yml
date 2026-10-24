@@ -38,9 +38,10 @@ jobs:
           docker run -d \
             --name parabank \
             -p 8080:8080 \
-            parasoft/parabank:latest
+            parasoft/parabank@sha256:0de7bbc8eb0f7ba61579421df1fc834fd7f559c08bf295597c0f9081e0a906e9
 
       
+     
       - name: Wait for ParaBank
         run: |
           for i in {1..60}; do
@@ -54,6 +55,13 @@ jobs:
           echo "ParaBank did not become available."
           docker logs parabank
           exit 1
+
+      - name: Inspect ParaBank database startup
+        run: |
+          docker logs parabank 2>&1 | grep -i -E \
+            "Database not yet initialized|HSQL Server|Database.*opened|SEQUENCE|ERROR" \
+            || true
+
 
 
       - name: Install Playwright browsers
