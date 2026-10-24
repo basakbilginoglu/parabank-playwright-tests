@@ -8,7 +8,6 @@ setup('register ParaBank user for CI', async ({ page }) => {
   expect(username, 'PARABANK_USERNAME must be configured').toBeTruthy();
   expect(password, 'PARABANK_PASSWORD must be configured').toBeTruthy();
 
-  // SSN her çalıştırmada benzersiz olsun, kullanıcı adı ise login testleriyle aynı kalsın
   const ssn = Date.now().toString().slice(-9).padStart(9, '0');
 
   const registerPage = new RegisterPage(page);
@@ -27,14 +26,18 @@ setup('register ParaBank user for CI', async ({ page }) => {
     password: password!,
   });
 
-  console.log('Registration URL:', page.url());
-  console.log(
-    'Registration result:',
-    (await page.locator('#rightPanel').innerText()).trim()
-  );
-
   await expect(page.locator('#rightPanel')).toContainText(
     'Your account was created successfully. You are now logged in.',
+    { timeout: 15000 }
+  );
+
+  // Transfer testleri için ikinci hesap aç
+  await page.goto('http://localhost:8080/parabank/openaccount.htm');
+  await page.locator('#type').selectOption('SAVINGS');
+  await expect(page.locator('#fromAccountId option').first()).toBeAttached();
+  await page.locator('input[value="Open New Account"]').click();
+  await expect(page.locator('#openAccountResult')).toContainText(
+    'Account Opened!',
     { timeout: 15000 }
   );
 });
