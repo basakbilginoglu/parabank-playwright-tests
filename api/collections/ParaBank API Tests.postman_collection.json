@@ -1,0 +1,228 @@
+{
+  "info": {
+    "_postman_id": "ba62936e-59dd-4026-96fb-43fe51154310",
+    "name": "ParaBank API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "14695543",
+    "_collection_link": "https://go.postman.co/collection/14695543-ba62936e-59dd-4026-96fb-43fe51154310?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "API-01 — List Customer Accounts",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\nconst accounts = pm.response.json();\n\npm.test(\"Response is a non-empty account list\", function () {\n    pm.expect(accounts).to.be.an(\"array\").that.is.not.empty;\n});\n\npm.test(\"All returned accounts belong to the requested customer\", function () {\n    const customerId = Number(pm.environment.get(\"customerId\"));\n\n    accounts.forEach(account => {\n        pm.expect(account).to.have.property(\"id\");\n        pm.expect(account.customerId).to.eql(customerId);\n    });\n});\n\nconst targetId = Number(pm.environment.get(\"toAccountId\"));\n\nconst targetAccount = accounts.find(\n    account => Number(account.id) === targetId\n);\n\npm.test(\"Target account exists in the customer account list\", function () {\n    pm.expect(targetAccount).to.exist;\n});\n\nif (targetAccount) {\n    pm.environment.set(\"targetBalanceBefore\", targetAccount.balance);\n}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/customers/{{customerId}}/accounts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "customers",
+            "{{customerId}}",
+            "accounts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-02 — Get Account Details",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\nconst account = pm.response.json();\n\npm.test(\"Account response contains required fields\", function () {\n    [\"id\", \"customerId\", \"type\", \"balance\"].forEach(field => {\n        pm.expect(account).to.have.property(field);\n    });\n});\n\npm.test(\"Returned account ID matches the requested account\", function () {\n    pm.expect(account.id).to.eql(\n        Number(pm.environment.get(\"accountId\"))\n    );\n});\n\n\n\npm.environment.set(\"sourceBalanceBefore\", account.balance);\n\n\n\npm.environment.set(\"sourceBalanceBefore\", account.balance);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/accounts/{{accountId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "accounts",
+            "{{accountId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-03 — Transfer Funds",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Transfer returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Transfer response contains a confirmation message\", function () {\n    pm.expect(pm.response.text())\n        .to.include(\"Successfully transferred\");\n});\n\npm.test(\"Confirmation contains the requested amount\", function () {\n    const amount = pm.environment.get(\"transferAmount\");\n\n    pm.expect(pm.response.text()).to.include(\"$\" + amount);\n});\n\nconst baseUrl = pm.environment.get(\"baseUrl\");\nconst sourceId = pm.environment.get(\"accountId\");\nconst targetId = pm.environment.get(\"toAccountId\");\nconst amount = Number(pm.environment.get(\"transferAmount\"));\n\nconst sourceBefore = Number(\n    pm.environment.get(\"sourceBalanceBefore\")\n);\nconst targetBefore = Number(\n    pm.environment.get(\"targetBalanceBefore\")\n);\n\npm.test(\"Starting balances are available\", function () {\n    pm.expect(Number.isFinite(sourceBefore)).to.eql(true);\n    pm.expect(Number.isFinite(targetBefore)).to.eql(true);\n    pm.expect(Number.isFinite(amount)).to.eql(true);\n});\n\nif (\n    pm.response.code === 200 &&\n    Number.isFinite(sourceBefore) &&\n    Number.isFinite(targetBefore) &&\n    Number.isFinite(amount)\n) {\n    pm.sendRequest({\n        url: `${baseUrl}/accounts/${sourceId}`,\n        method: \"GET\",\n        header: { Accept: \"application/json\" }\n    }, function (err, response) {\n        pm.test(\"Source account balance reflects the transfer\", function () {\n            pm.expect(err).to.eql(null);\n            pm.expect(response.code).to.eql(200);\n\n            const account = response.json();\n            pm.expect(Number(account.balance))\n                .to.be.closeTo(sourceBefore - amount, 0.01);\n        });\n    });\n\n    pm.sendRequest({\n        url: `${baseUrl}/accounts/${targetId}`,\n        method: \"GET\",\n        header: { Accept: \"application/json\" }\n    }, function (err, response) {\n        pm.test(\"Target account balance reflects the transfer\", function () {\n            pm.expect(err).to.eql(null);\n            pm.expect(response.code).to.eql(200);\n\n            const account = response.json();\n            pm.expect(Number(account.balance))\n                .to.be.closeTo(targetBefore + amount, 0.01);\n        });\n    });\n}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/transfer?fromAccountId={{accountId}}&toAccountId={{toAccountId}}&amount=5",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "transfer"
+          ],
+          "query": [
+            {
+              "key": "fromAccountId",
+              "value": "{{accountId}}"
+            },
+            {
+              "key": "toAccountId",
+              "value": "{{toAccountId}}"
+            },
+            {
+              "key": "amount",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-04 — Get Account Transactions",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\npm.test(\"HTTP status is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\nconst transactions = pm.response.json();\nconst accountId = Number(pm.environment.get(\"accountId\"));\n\npm.test(\"Response contains a transaction list\", function () {\n    pm.expect(transactions).to.be.an(\"array\");\n});\n\npm.test(\"Transaction records contain the required fields\", function () {\n    pm.expect(transactions.length).to.be.above(0);\n\n    transactions.forEach(transaction => {\n        pm.expect(transaction).to.have.property(\"id\");\n        pm.expect(transaction).to.have.property(\"accountId\");\n        pm.expect(transaction).to.have.property(\"type\");\n        pm.expect(transaction).to.have.property(\"date\");\n        pm.expect(transaction).to.have.property(\"amount\");\n        pm.expect(transaction).to.have.property(\"description\");\n    });\n});\n\npm.test(\"All transactions belong to the requested account\", function () {\n    transactions.forEach(transaction => {\n        pm.expect(Number(transaction.accountId)).to.eql(accountId);\n    });\n});\n\npm.test(\"Transaction types and amounts are valid\", function () {\n    transactions.forEach(transaction => {\n        pm.expect(transaction.type).to.be.oneOf([\"Credit\", \"Debit\"]);\n        pm.expect(Number(transaction.amount)).to.be.a(\"number\");\n        pm.expect(Number.isFinite(Number(transaction.amount))).to.eql(true);\n        pm.expect(Number(transaction.date)).to.be.above(0);\n        pm.expect(transaction.description).to.be.a(\"string\").and.not.empty;\n    });\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/accounts/{{accountId}}/transactions",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "accounts",
+            "{{accountId}}",
+            "transactions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-05 — Invalid Account ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Invalid account returns HTTP 400\", function () {\n    pm.response.to.have.status(400);\n});\n\npm.test(\"Response explains why the request failed\", function () {\n    pm.expect(pm.response.text()).to.include(\n        \"Could not find account #999999999\"\n    );\n});\n\n\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/accounts/{{invalidAccountId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "accounts",
+            "{{invalidAccountId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-06 — Zero Amount Transfer",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Zero-amount transfer returns HTTP 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response contains the observed transfer message\", function () {\n    pm.expect(pm.response.text())\n        .to.include(\"Successfully transferred $0\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/transfer?fromAccountId={{accountId}}&toAccountId={{toAccountId}}&amount=0",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "transfer"
+          ],
+          "query": [
+            {
+              "key": "fromAccountId",
+              "value": "{{accountId}}"
+            },
+            {
+              "key": "toAccountId",
+              "value": "{{toAccountId}}"
+            },
+            {
+              "key": "amount",
+              "value": "0"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
