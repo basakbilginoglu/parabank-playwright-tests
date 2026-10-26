@@ -32,7 +32,24 @@ export class AccountPage {
       .filter((id): id is string => Boolean(id));
   }
 
-  getAccountLink(accountId: string): Locator {
+    getAccountLink(accountId: string): Locator {
     return this.page.locator(`#accountTable tbody a[href="activity.htm?id=${accountId}"]`);
   }
+   
+async getAccountBalance(accountId: string): Promise<number> {
+  const row = this.getAccountLink(accountId).locator('xpath=ancestor::tr[1]');
+
+  await expect(row).toBeVisible();
+
+  const balanceText = await row.locator('td').nth(2).innerText();
+
+  const balance = Number(
+    balanceText.replace(/[$,]/g, '').trim()
+  );
+
+  expect(Number.isFinite(balance)).toBeTruthy();
+
+  return balance;
+}
+
 }
