@@ -30,7 +30,7 @@ test('UI-05 - Transfer to the same account', async ({ page }) => {
     throw new Error('No common account found in transfer dropdowns.');
   }
 
-  await transferPage.transfer('1.00', accountId, accountId);
+  await transferPage.transfer('2.00', accountId, accountId);
 
   await transferPage.expectTransferCompleted(
     '1.00',
