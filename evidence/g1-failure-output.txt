@@ -1,0 +1,107 @@
+
+Running 4 tests using 3 workers
+
+[1/4] [setup] › tests/auth.setup.ts:5:6 › register ParaBank user for CI
+[2/4] [chromium] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account
+[3/4] [webkit] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account
+[4/4] [firefox] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account
+  1) [chromium] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account ───
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#amountResult')
+    Expected substring: "1.00"
+    Received string:    "$2.00"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('#amountResult') with timeout 5000ms
+      - waiting for locator('#amountResult')
+        14 × locator resolved to <span id="amountResult">$2.00</span>
+           - unexpected value "$2.00"
+
+
+       at ../pages/TransferPage.ts:69
+
+      67 |   ): Promise<void> {
+      68 |     await expect(this.resultHeading).toHaveText(/Transfer Complete!/i);
+    > 69 |     await expect(this.amountResult).toContainText(amount);
+         |                                     ^
+      70 |     await expect(this.fromAccountResult).toContainText(fromAccountId);
+      71 |     await expect(this.toAccountResult).toContainText(toAccountId);
+      72 |   }
+        at TransferPage.expectTransferCompleted (/Users/basakbilginoglu/Desktop/demo/parabank-playwright-tests/parabank-playwright-tests/pages/TransferPage.ts:69:37)
+        at /Users/basakbilginoglu/Desktop/demo/parabank-playwright-tests/parabank-playwright-tests/tests/same-account-transfer.spec.ts:35:3
+
+    Error Context: test-results/same-account-transfer-UI-05---Transfer-to-the-same-account-chromium/error-context.md
+
+
+  2) [webkit] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account ─────
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#amountResult')
+    Expected substring: "1.00"
+    Received string:    "$2.00"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('#amountResult') with timeout 5000ms
+      - waiting for locator('#amountResult')
+        14 × locator resolved to <span id="amountResult">$2.00</span>
+           - unexpected value "$2.00"
+
+
+       at ../pages/TransferPage.ts:69
+
+      67 |   ): Promise<void> {
+      68 |     await expect(this.resultHeading).toHaveText(/Transfer Complete!/i);
+    > 69 |     await expect(this.amountResult).toContainText(amount);
+         |                                     ^
+      70 |     await expect(this.fromAccountResult).toContainText(fromAccountId);
+      71 |     await expect(this.toAccountResult).toContainText(toAccountId);
+      72 |   }
+        at TransferPage.expectTransferCompleted (/Users/basakbilginoglu/Desktop/demo/parabank-playwright-tests/parabank-playwright-tests/pages/TransferPage.ts:69:37)
+        at /Users/basakbilginoglu/Desktop/demo/parabank-playwright-tests/parabank-playwright-tests/tests/same-account-transfer.spec.ts:35:3
+
+    Error Context: test-results/same-account-transfer-UI-05---Transfer-to-the-same-account-webkit/error-context.md
+
+
+  3) [firefox] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account ────
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#amountResult')
+    Expected substring: "1.00"
+    Received string:    "$2.00"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('#amountResult') with timeout 5000ms
+      - waiting for locator('#amountResult')
+        14 × locator resolved to <span id="amountResult">$2.00</span>
+           - unexpected value "$2.00"
+
+
+       at ../pages/TransferPage.ts:69
+
+      67 |   ): Promise<void> {
+      68 |     await expect(this.resultHeading).toHaveText(/Transfer Complete!/i);
+    > 69 |     await expect(this.amountResult).toContainText(amount);
+         |                                     ^
+      70 |     await expect(this.fromAccountResult).toContainText(fromAccountId);
+      71 |     await expect(this.toAccountResult).toContainText(toAccountId);
+      72 |   }
+        at TransferPage.expectTransferCompleted (/Users/basakbilginoglu/Desktop/demo/parabank-playwright-tests/parabank-playwright-tests/pages/TransferPage.ts:69:37)
+        at /Users/basakbilginoglu/Desktop/demo/parabank-playwright-tests/parabank-playwright-tests/tests/same-account-transfer.spec.ts:35:3
+
+    Error Context: test-results/same-account-transfer-UI-05---Transfer-to-the-same-account-firefox/error-context.md
+
+
+  3 failed
+    [chromium] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account ────
+    [firefox] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account ─────
+    [webkit] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account ──────
+  1 passed (8.2s)
+
+[36m  Serving HTML report at http://localhost:9323. Press Ctrl+C to quit.[39m

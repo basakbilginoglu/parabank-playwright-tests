@@ -1,0 +1,13 @@
+
+Running 4 tests using 3 workers
+
+[1/4] [setup] › tests/auth.setup.ts:5:6 › register ParaBank user for CI
+[2/4] [webkit] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account
+[3/4] [chromium] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account
+[4/4] [firefox] › tests/same-account-transfer.spec.ts:6:5 › UI-05 - Transfer to the same account
+  4 passed (3.4s)
+
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report[39m
+[36m[39m
