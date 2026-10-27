@@ -25,6 +25,12 @@ export function chooseDistinctAccounts(
       `Need at least two distinct account IDs; discovered: ${accountIds.join(', ') || '(none)'}`
     );
   }
+  // Test data constraint: select two distinct accounts to isolate
+  // transfer behavior between separate accounts.
+  // Whether transfers between the same account are allowed is unconfirmed.
+if (fromAccountId === toAccountId) {
+  throw new Error('Test setup requires two distinct account IDs.');
+}
   if (fromAccountId === toAccountId) {
     throw new Error('Source and destination account IDs must be different.');
   }

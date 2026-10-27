@@ -1,0 +1,39 @@
+# Final Test Assessment — ParaBank
+
+## 1. Ne doğruladım?
+
+ParaBank üzerinde Playwright ile UI testleri, API kontrolleri ve farklı katmanlardaki davranışları inceleyen testler gerçekleştirdim. Giriş, hesap görüntüleme, para transferi ve işlem geçmişi gibi temel akışları değerlendirdim. Test verilerinin yönetimi, hesapların seçimi ve testlerin tekrarlanabilirliği üzerinde çalıştım.
+
+Transfer işlemlerinde sıfır, negatif tutarlı ve aynı hesaba transfer senaryolarını da inceledim. Sıfır tutarlı transferin başarılı sonuçlanabildiğini gözlemledim. Negatif tutarlı transferlerde uygulamanın işlemi başarılı olarak sonuçlandırabildiği, gönderen hesabın bakiyesinin arttığı ve alıcı hesabın bakiyesinin azaldığı durumları araştırdım. Ayrıca gönderen ve alıcı hesap aynı olduğunda transferin başarılı mesajıyla sonuçlandığını gözlemledim.
+
+Negatif tutarlı transfer için test düzeyinde kabul kriterleri belirledim: transferin başarılı olarak sonuçlanmaması ve işlem geçmişine yeni bir kayıt eklenmemesi. Uygulamanın gözlemlenen davranışı bu beklentilerle uyuşmadı. Bununla birlikte, bu kriterleri destekleyen resmî bir ürün gereksinimi veya iş kuralı bulunmadığından, bulguları doğrulanmış gereksinim ihlalleri olarak sınıflandıramadım.
+
+## 2. Hangi önemli risk açık kaldı?
+
+En önemli açık risk, transfer işlemlerinin sınır durumlarında beklenen davranışın ve hesap bakiyelerinin nasıl etkilenmesi gerektiğinin net olmamasıdır.
+
+Negatif tutarlı transferin başarılı sonuçlanabilmesi ve hesap bakiyelerini beklenmedik biçimde değiştirebilmesi, finansal kayıtların tutarlılığı açısından incelenmesi gereken bir davranıştır. Sıfır tutarlı transferin ve aynı hesaba transferin başarılı sonuçlanması da ürün ekibinin beklenen davranışı netleştirmesini gerektirir.
+
+Ayrıca aynı hesaba transferin başarılı görünmesinin ardından bakiyenin ve işlem geçmişinin nasıl etkilendiği, bu sonuçlar doğrulanmadıysa, ayrı olarak incelenmelidir. İlgili iş kuralları netleşmediği için bu davranışların ürün açısından doğru veya yanlış olduğu konusunda kesin bir sonuca varamadım.
+
+## 3. Hangi test gerçekten güvenilir?
+
+Testlerin güvenilirliğini yalnızca başarılı veya başarısız sonuçlanmalarına göre değerlendirmiyorum. Test verisinin kontrol edilebilir olması, ön koşulların sağlanması ve sonuçların gözlemlenebilir olması da önemlidir.
+
+Hesap görüntüleme ve temel transfer akışlarındaki kontroller, beklenen sonuçlar ve hesap bakiyeleri gözlemlenebildiği ölçüde tekrarlanabilir kontroller sunar. Negatif ve sıfır tutarlı transfer ile aynı hesaba transfer testleri ise uygulamanın mevcut davranışlarını ortaya çıkarmak açısından değerlidir.
+
+Negatif tutarlı transfer testinde beklenen davranışı ve kabul kriterlerini açıkça belirledim. Ancak ürün gereksinimi doğrulanmadığı için bu testin sonucu, uygulamanın belirlediğim test beklentisine uyup uymadığını gösterir; tek başına resmî bir iş kuralının ihlal edildiğini kanıtlamaz.
+
+## 4. Bir ürün ekibine neyi öneririm?
+
+Öncelikle transfer işlemlerinin iş kurallarını ve kabul kriterlerini ürün ekibiyle netleştirmeyi öneririm. Negatif ve sıfır tutarlı transferlerin nasıl ele alınacağı, aynı hesaba transferin mümkün olup olmadığı ve bu işlemlerin hesap bakiyeleriyle işlem geçmişini nasıl etkilemesi gerektiği açıkça tanımlanmalıdır.
+
+Negatif tutarlı transfer için belirlediğim test kriterleri, transferin başarılı olarak sonuçlanmaması ve işlem geçmişine yeni bir kayıt eklenmemesiydi. Testlerde uygulamanın bu beklentilerden farklı davrandığını gözlemledim. Ekibin bu bulguyu incelemesini, beklenen davranışı onaylamasını ve ilgili gereksinimleri dokümante etmesini öneririm.
+
+Ayrıca transfer sonuçlarının yalnızca başarı mesajıyla değerlendirilmemesini; işlem öncesi ve sonrası bakiyelerin, işlem geçmişinin ve API yanıtlarının birlikte kontrol edilmesini öneririm. Gereksinimler onaylandıktan sonra bu senaryolar, beklenen davranışı açıkça doğrulayan regresyon testlerine dönüştürülmelidir.
+
+## 5. Hangi kararları savunabilirim?
+
+Test verilerini kontrollü biçimde yönetmek, farklı hesapları seçmek ve transfer sonuçlarını yalnızca başarı mesajıyla değerlendirmeyip hesap bakiyeleri ve işlem geçmişiyle birlikte incelemek, savunabileceğim teknik kararlardır.
+
+Ayrıca gözlemlediğim davranışları, test için belirlediğim kabul kriterlerini ve doğrulanmış ürün gereksinimlerini birbirinden ayırmayı tercih ettim. İş kuralları belirsizken kesin hata sınıflandırması yapmak yerine belirsizliği belgelemek ve ürün ekibinin netleştirmesi gereken noktaları göstermek, test sonuçlarının daha doğru yorumlanmasını sağlar.
