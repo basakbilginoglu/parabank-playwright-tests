@@ -63,12 +63,7 @@ Dokümantasyon: https://parabank.parasoft.com/parabankv2/api-docs/index.html
 
 Hesap listeleme ve hesap detayı GET istekleri yerelde doğrulandı. Transfer ve transaction endpoint'lerinin method, path, parametre ve response tipleri dokümantasyondan incelenerek eklenmelidir.
 
-## 5. Mentor Sorusu
-
-**Public ortamda geçen bir test local ortamda başarısız olursa ne yaparım?**
+## 5.Public ortamda geçen bir test local ortamda başarısız olursa ne yaparım?
 
 Önce ürünün veya ortamın hatalı olduğuna karar vermem. URL, sürüm, konfigürasyon, test verisi, DB durumu ve servis bağımlılıklarını karşılaştırırım. Logları, request/response verilerini ve trace'leri incelerim. Sorun gereksinime aykırı ürün davranışıysa bug; ortam farkından kaynaklanıyorsa çevresel sorun olarak değerlendiririm.
 
-## 6. Sonuç
-
-Local UI, API ve Docker container erişimi doğrulandı. Teslim öncesinde ekran görüntüleri eklenmeli, image tag'i doğrulanmalı ve transfer/transaction endpoint bilgileri tamamlanmalıdır.
