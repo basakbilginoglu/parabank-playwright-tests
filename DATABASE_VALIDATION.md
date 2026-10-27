@@ -122,4 +122,4 @@ The observed balance changes match the expected effect of a $5 transfer. The cur
 - The aggregate and breakdown checks identified different numbers of positive $5 records between the accounts.
 - The exact transfer pair has not been conclusively correlated with a unique test execution.
 
-**Overall result:** Account-level balance consistency is supported by the API and database observations. Full transaction-level reconciliation remains inconclusive because multiple similar transactions exist and the aggregate counts differ. No claim of complete database integrity is made without further correlation of the specific transfer records.
+**Overall result:** Account-level balance consistency is supported by the API and database observations. Full transaction-level reconciliation remains inconclusive because multiple similar transactions exist and the aggregate counts differ.

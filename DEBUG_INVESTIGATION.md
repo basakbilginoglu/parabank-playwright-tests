@@ -36,12 +36,11 @@ The test setup was updated to generate a unique username for each run, preventin
 
 **Evidence to attach:**
 - **Code changes:** [View commit diff](https://github.com/basakbilginoglu/parabank-playwright-tests/commit/4a44025fc8812e871b63e278e82914e64c06ebf9)
-- The relevant changes in `auth.setup.ts`, if applicable.
-- The successful GitHub Actions run after the changes.
+
 - ### Evidence C: Existing-user error and fix
 During subsequent CI attempts, user creation failed with an error indicating that the user already existed.
-
 - **Code changes:** [View commit diff](https://github.com/basakbilginoglu/parabank-playwright-tests/commit/8a74776b831ddac847fe0770ab01180a7e0c2df7)
+- The successful GitHub Actions run after the changes.
 ## 4. Hypothesis Elimination
 
 | Hypothesis | Evidence and Assessment |
@@ -67,8 +66,3 @@ The issue was ultimately resolved after the authentication setup was addressed i
 | Further investigation | Examined the existing-user error during registration. | A user-creation conflict was observed. |
 | Final fix | Addressed authentication setup in `auth.setup.ts`. | The issue was resolved. |
 
-
-
-## Final Assessment
-
-This investigation shows why an initial environment difference should not automatically be treated as the root cause. Correcting the Docker image mismatch alone did not resolve the failure. The investigation then exposed an existing-user conflict, and addressing `auth.setup.ts` resolved the issue. CI logs and code changes should be retained to support these conclusions.

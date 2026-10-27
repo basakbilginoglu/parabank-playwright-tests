@@ -1,4 +1,6 @@
 
+# ParaBank Playwright Testing — CI Setup and Evidence
+
 This document describes the CI setup, local environment preparation, test execution, and evidence collected for the ParaBank Playwright testing project.
 
 It explains how the application is prepared for testing, how TypeScript checks and Playwright smoke tests are executed, and how successful and failed test runs are documented.
@@ -43,70 +45,76 @@ Install the following tools:
 
 ### Install Dependencies
 
-Run the following command from the repository root:
+Run the following commands from the repository root:
 
 ```bash
 npm ci
-
-
-Install the required Playwright browsers:
 npx playwright install
+```
 
+### Start ParaBank
 
-Start ParaBank
 Start the ParaBank Docker container using the image and configuration defined for this project.
 
 Verify that the application is accessible at:
 
-http://localhost:8080/parabank
+`http://localhost:8080/parabank`
 
 The application must be ready before UI tests are executed.
-Run TypeScript Type-Checking
+
+### Run TypeScript Type-Checking
+
+```bash
 npm run typecheck
+```
 
+This command runs the TypeScript compiler without generating output files.
 
-This runs the TypeScript compiler without generating output files.
-Run Playwright Tests
+### Run Playwright Tests
+
+```bash
 npm test
+```
 
+Use the npm scripts defined in `package.json` for other supported test execution modes.
 
-Use the npm scripts defined in package.json for other supported test execution modes.
-4. GitHub Actions CI Pipeline
-The GitHub Actions workflow is maintained under .github/workflows/.
+## 4. GitHub Actions CI Pipeline
+
+The GitHub Actions workflow is maintained under `.github/workflows/`.
 
 The pipeline is designed to execute the following steps:
+
 1. Check out the repository.
 2. Set up Node.js.
-3. Install dependencies using npm ci.
+3. Install dependencies using `npm ci`.
 4. Install the required Playwright browsers.
-5. Run npm run typecheck.
+5. Run `npm run typecheck`.
 6. Start the ParaBank Docker container.
 7. Wait until the application is accessible.
-8. Execute the selected Playwright smoke tests.
+8. Execute the configured Playwright smoke tests.
 9. Upload available test reports and failure artifacts.
-Type-checking runs before Playwright tests so that TypeScript errors are detected before UI test execution.
+
+Type-checking runs before Playwright tests so that TypeScript errors can be detected before UI test execution.
 
 The readiness check helps prevent tests from running before the application is available.
-5. Test Data and Credentials
+
+## 5. Test Data and Credentials
+
 UI tests require a valid test user and an available ParaBank environment.
 
 Credentials must be provided through environment variables or GitHub Actions Secrets when required. Real credentials must not be committed to the repository.
 
+The `auth.setup.ts` setup handles both registration outcomes: a newly created user and an existing user in the persistent ParaBank database. For an existing user, it logs in and checks whether a second account is needed before creating one.
+
 Account balances and transaction histories may change as transfer tests execute. Tests that share mutable account data can affect one another, so the initial state and resulting state must be considered when interpreting results.
 
-The test environment and required data must be prepared before execution.efore execution.
+The test environment and required data must be prepared before execution.
 
-## CI, Reproducibility and Quality Gate
-
-### Pipeline Overview
-
-GitHub Actions is used to run TypeScript type-checking and selected Playwright UI smoke tests. The pipeline installs dependencies with `npm ci`, installs the required Playwright browsers, starts the ParaBank application, checks service readiness, and then executes the selected tests.
-
-Type-checking runs before the Playwright test suite so that TypeScript errors can be detected before UI execution.
+## 6. CI, Reproducibility, and Quality Gate
 
 ### Environment and Test Data
 
-ParaBank runs in a Docker container. The workflow must verify that the application is reachable before starting the UI tests.
+ParaBank runs in a Docker container. The workflow checks that the application is reachable before starting the UI tests.
 
 Test credentials are provided through GitHub Actions Secrets rather than being committed to the repository. The test user and any required test data must be available in the CI environment before the relevant tests execute.
 
@@ -124,8 +132,8 @@ Confidence in the pipeline also depends on repeatable environment setup, isolate
 
 ### Run Evidence
 
-- Successful run 1: [https://github.com/basakbilginoglu/parabank-playwright-tests/actions/runs/40371205791/job/121742108220]
-- Successful run 2: [https://github.com/basakbilginoglu/parabank-playwright-tests/actions/runs/40383020132/job/121783939772]
-- ![Controlled failure evidence](evidence/ci/controlled-failure.png)
+- **Successful run 1:** [View GitHub Actions run](https://github.com/basakbilginoglu/parabank-playwright-tests/actions/runs/40371205791/job/121742108220)
+- **Successful run 2:** [View GitHub Actions run](https://github.com/basakbilginoglu/parabank-playwright-tests/actions/runs/40383020132/job/121783939772)
+- **Controlled failure evidence:** `evidence/ci/controlled-failure.png`
 
 The controlled failure is documented separately to demonstrate how the pipeline reports a known test failure and preserves diagnostic evidence.

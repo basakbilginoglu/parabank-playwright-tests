@@ -121,4 +121,4 @@ Consequently, the available evidence supports API-level balance consistency but 
 - **Database Verification:** Not performed
 - **Data Masking:** Credentials, session tokens, and sensitive personal information must be excluded from evidence.
 
-*Evidence files listed above should be added to the repository only after they have actually been captured. Do not create placeholder screenshots or report unperformed checks as completed.*
+
