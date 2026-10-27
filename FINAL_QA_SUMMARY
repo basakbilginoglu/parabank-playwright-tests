@@ -6,7 +6,12 @@ ParaBank üzerinde Playwright ile UI testleri, API kontrolleri ve farklı katman
 
 Transfer işlemlerinde sıfır, negatif tutarlı ve aynı hesaba transfer senaryolarını da inceledim. Sıfır tutarlı transferin başarılı sonuçlanabildiğini gözlemledim. Negatif tutarlı transferlerde uygulamanın işlemi başarılı olarak sonuçlandırabildiği, gönderen hesabın bakiyesinin arttığı ve alıcı hesabın bakiyesinin azaldığı durumları araştırdım. Ayrıca gönderen ve alıcı hesap aynı olduğunda transferin başarılı mesajıyla sonuçlandığını gözlemledim.
 
-Negatif tutarlı transfer için test düzeyinde kabul kriterleri belirledim: transferin başarılı olarak sonuçlanmaması ve işlem geçmişine yeni bir kayıt eklenmemesi. Uygulamanın gözlemlenen davranışı bu beklentilerle uyuşmadı. Bununla birlikte, bu kriterleri destekleyen resmî bir ürün gereksinimi veya iş kuralı bulunmadığından, bulguları doğrulanmış gereksinim ihlalleri olarak sınıflandıramadım.
+Negatif tutarlı transfer için test düzeyinde kabul kriterleri belirledim:
+
+- Transferin başarılı olarak sonuçlanmaması.
+- İşlem geçmişine yeni bir kayıt eklenmemesi.
+
+Uygulamanın gözlemlenen davranışı bu beklentilerle uyuşmadı. Bununla birlikte, bu kriterleri destekleyen resmî bir ürün gereksinimi veya iş kuralı bulunmadığından, bulguları doğrulanmış gereksinim ihlalleri olarak sınıflandıramadım.
 
 ## 2. Hangi önemli risk açık kaldı?
 
