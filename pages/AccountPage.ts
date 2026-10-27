@@ -1,3 +1,4 @@
+
 import { expect, type Locator, type Page } from '@playwright/test';
 
 export class AccountPage {
@@ -6,7 +7,9 @@ export class AccountPage {
 
   constructor(private readonly page: Page) {
     this.accountsTable = page.locator('#accountTable');
-    this.accountLinks = page.locator('#accountTable tbody a[href*="activity.htm?id="]');
+    this.accountLinks = page.locator(
+      '#accountTable tbody a[href*="activity.htm?id="]'
+    );
   }
 
   async goto(): Promise<void> {
@@ -14,42 +17,48 @@ export class AccountPage {
   }
 
   async expectVisibleAccounts(): Promise<void> {
-  await expect(this.accountsTable).toBeVisible();
-  await expect(
-    this.accountLinks.first(),
-    'At least one account link should exist'
-  ).toBeVisible({ timeout: 15000 });
-}
+    await expect(this.accountsTable).toBeVisible();
+
+    await expect(
+      this.accountLinks,
+      'At least one account link should exist'
+    ).not.toHaveCount(0, { timeout: 15000 });
+  }
 
   async getAccountIds(): Promise<string[]> {
-    await expect(this.accountLinks.first()).toBeVisible({ timeout: 15000 });
+    await expect(
+      this.accountLinks,
+      'At least one account link should exist'
+    ).not.toHaveCount(0, { timeout: 15000 });
 
     const hrefs = await this.accountLinks.evaluateAll((links) =>
-      links.map((link) => (link as HTMLAnchorElement).getAttribute('href') ?? '')
+      links.map((link) =>
+        (link as HTMLAnchorElement).getAttribute('href') ?? ''
+      )
     );
+
     return hrefs
       .map((href) => href.match(/[?&]id=(\d+)/)?.[1])
       .filter((id): id is string => Boolean(id));
   }
 
-    getAccountLink(accountId: string): Locator {
-    return this.page.locator(`#accountTable tbody a[href="activity.htm?id=${accountId}"]`);
+  getAccountLink(accountId: string): Locator {
+    return this.page.locator(
+      `#accountTable tbody a[href="activity.htm?id=${accountId}"]`
+    );
   }
-   
-async getAccountBalance(accountId: string): Promise<number> {
-  const row = this.getAccountLink(accountId).locator('xpath=ancestor::tr[1]');
 
-  await expect(row).toBeVisible();
+  async getAccountBalance(accountId: string): Promise<number> {
+    const row = this.getAccountLink(accountId).locator('xpath=ancestor::tr[1]');
 
-  const balanceText = await row.locator('td').nth(2).innerText();
+    await expect(row).toBeVisible();
 
-  const balance = Number(
-    balanceText.replace(/[$,]/g, '').trim()
-  );
+    const balanceText = await row.locator('td').nth(2).innerText();
 
-  expect(Number.isFinite(balance)).toBeTruthy();
+    const balance = Number(balanceText.replace(/[$,]/g, '').trim());
 
-  return balance;
-}
+    expect(Number.isFinite(balance)).toBeTruthy();
 
+    return balance;
+  }
 }

@@ -12,11 +12,13 @@ test('UI-07: known defect — negative transfer is recorded in transaction histo
   page,
   loggedInPage,
 }) => {
-  // Known application defect:
-  // ParaBank accepts negative transfer amounts and records them in history.
-  // The assertions below preserve the expected business rules.
-  // test.fail() marks the expected failure so the defect remains visible
-  // without making the CI job fail when the defect is reproduced.
+  // Observed behavior:
+// ParaBank accepts a negative transfer amount and records a transaction
+// in the transaction history.
+// Test assumption:
+// This test assumes negative transfer amounts should be rejected.
+// The expected behavior has not been confirmed against an official
+// business rule or product specification.
   test.fail(
     true,
     'Known application defect: negative transfers are accepted and recorded.',
