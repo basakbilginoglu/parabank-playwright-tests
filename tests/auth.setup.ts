@@ -1,3 +1,4 @@
+
 import { test as setup, expect } from '@playwright/test';
 import { RegisterPage } from '../pages/RegisterPage';
 import { credentials } from '../test-data/credentials';
@@ -28,37 +29,64 @@ setup('register ParaBank user for CI', async ({ page }) => {
 
   const rightPanel = page.locator('#rightPanel');
 
-  // Kayıt ya başarılı olur ya da kullanıcı zaten vardır (lokalde kalıcı DB)
+  const registrationSuccess = rightPanel.getByText(
+    'Your account was created successfully. You are now logged in.'
+  );
+
+  const usernameExists = rightPanel.getByText(
+    'This username already exists.'
+  );
+
   await expect(
-    rightPanel.getByText(
-      /Your account was created successfully|This username already exists/
-    )
+    registrationSuccess.or(usernameExists)
   ).toBeVisible({ timeout: 15000 });
 
-  const alreadyExists = await rightPanel
-    .getByText('This username already exists.')
-    .isVisible();
-
-  if (alreadyExists) {
-    // Kullanıcı daha önce kayıtlı: sadece giriş yap
+  if (await usernameExists.isVisible()) {
     await page.goto('index.htm');
+
     await page.locator('input[name="username"]').fill(username!);
     await page.locator('input[name="password"]').fill(password!);
     await page.locator('input[value="Log In"]').click();
-    await expect(page).toHaveURL(/overview\.htm$/);
-  } else {
-    await expect(rightPanel).toContainText(
-      'Your account was created successfully. You are now logged in.'
-    );
 
-    // Transfer testleri için ikinci hesap aç (sadece yeni kullanıcıda)
+    await expect(page).toHaveURL(/overview\.htm$/);
+  }
+
+  // Ensure the user has at least one account before checking account count.
+  await page.goto('overview.htm');
+
+  const accountLinks = page.locator(
+    '#accountTable a[href*="activity.htm"]'
+  );
+
+  await expect(accountLinks).not.toHaveCount(0, {
+    timeout: 15000,
+  });
+
+  const accountCount = await accountLinks.count();
+
+  // Create a second account only when one does not already exist.
+  if (accountCount < 2) {
     await page.goto('openaccount.htm');
+
     await page.locator('#type').selectOption('SAVINGS');
-    await expect(page.locator('#fromAccountId option').first()).toBeAttached();
+
+    const sourceAccountOptions = page.locator('#fromAccountId option');
+
+    await expect(sourceAccountOptions).not.toHaveCount(0, {
+      timeout: 15000,
+    });
+
     await page.locator('input[value="Open New Account"]').click();
+
     await expect(page.locator('#openAccountResult')).toContainText(
       'Account Opened!',
       { timeout: 15000 }
     );
+
+    await page.goto('overview.htm');
+
+    await expect(accountLinks).toHaveCount(2, {
+      timeout: 15000,
+    });
   }
 });
